@@ -3,6 +3,7 @@ package com.example.svoboda;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.Looper;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -24,7 +25,7 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
-public class LoginActivity extends AppCompatActivity {
+public class LoginActivity extends AppCompatActivity implements Callback{
     private static final String TAG = "LoginActivity";
     private EditText username;
     private EditText password;
@@ -34,8 +35,8 @@ public class LoginActivity extends AppCompatActivity {
     private JSONObject loginCredentials;
     private ContextData contextData;
     private IOHandler ioHandler;
+    private SvobodaAPIClient svobodaAPIClient;
 
-    private OkHttpClient client = new OkHttpClient();
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -44,6 +45,7 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
         contextData = ContextData.getInstance();
+        svobodaAPIClient = SvobodaAPIClient.getInstance();
         ioHandler = new IOHandler(this);
         username = findViewById(R.id.usernameInput);
         password = findViewById(R.id.passwordInput);
@@ -56,7 +58,6 @@ public class LoginActivity extends AppCompatActivity {
             This makes an attempt to log the user in with the session id if there
             is one in the internal storage
          */
-//        JSONObject internalData = readInternalDataAsJSON();
         JSONObject internalData = ioHandler.readInternalDataAsJSON("svoboda.txt");
         try
         {
@@ -122,89 +123,83 @@ public class LoginActivity extends AppCompatActivity {
             Dont allow user to click login button while validating the credentials
          */
         setLoginButtonState(false);
+        svobodaAPIClient.makeRequest(contextData.loginUrl, requestData, this);
+    }
 
-        MediaType JSON = MediaType.parse("application/json; charset=utf-8");
-        RequestBody req = RequestBody.create(JSON, requestData.toString());
-        Request request = new Request.Builder()
-                .url(contextData.loginUrl)
-                .post(req)
-                .build();
+    @Override
+    public void onFailure(@NonNull  Call call, @NonNull IOException e)
+    {
+        e.printStackTrace();
+    }
 
-        client.newCall(request).enqueue(new Callback()
+    @Override
+    public void onResponse(@NonNull Call call,@NonNull Response response)
+    {
+        if (!response.isSuccessful())
         {
-            @Override
-            public void onFailure(Call call, IOException e)
+            /*
+                Unsuccessful login. We clear the login input fields,
+                the loginCredentials object and enable the login button.
+             */
+            new Handler(Looper.getMainLooper()).post(new Runnable()
             {
-                e.printStackTrace();
-            }
-
-            @Override
-            public void onResponse(Call call, final Response response)
-            {
-                if (!response.isSuccessful())
+                @Override
+                public void run()
                 {
-                    /*
-                        Unsuccessful login. We clear the login input fields,
-                        the loginCredentials object and enable the login button.
-                     */
-                    new Handler(Looper.getMainLooper()).post(new Runnable()
-                    {
-                        @Override
-                        public void run()
-                        {
-                            if (response.body() != null)
-                            {
-                                try {
-                                    Toast.makeText(LoginActivity.this, response.body().string(), Toast.LENGTH_SHORT).show();
-                                } catch (IOException e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                            username.getText().clear();
-                            password.getText().clear();
-                            loginCredentials = new JSONObject();
-                            setLoginButtonState(true);
-                        }
-                    });
-                }
-                else
-                {
-                    /*
-                        Successful login. We save the data to the internal storage
-                        and to the ContextData object for easy access and open the
-                        Map for the user.
-                     */
-                    JSONObject jsonData = null;
                     if (response.body() != null)
                     {
                         try
                         {
-                            jsonData = new JSONObject(response.body().string());
-                            response.body().close();
-                            ioHandler.writeJSONToInternalData(jsonData);
-                            contextData.userProfile = jsonData;
-                            new Handler(Looper.getMainLooper()).post(new Runnable()
-                            {
-                                @Override
-                                public void run()
-                                {
-                                    Toast.makeText(LoginActivity.this,
-                                            "Successful login", Toast.LENGTH_SHORT).show();                                }
-                            });
-                            Intent openMapIntent = new Intent(LoginActivity.this, MenuActivity.class);
-                            startActivity(openMapIntent);
+                            Toast.makeText(LoginActivity.this, response.body().string(), Toast.LENGTH_SHORT).show();
                         }
                         catch (IOException e)
                         {
                             e.printStackTrace();
                         }
-                        catch (JSONException e)
-                        {
-                            e.printStackTrace();
-                        }
                     }
+                    username.getText().clear();
+                    password.getText().clear();
+                    loginCredentials = new JSONObject();
+                    setLoginButtonState(true);
+                }
+            });
+        }
+        else
+        {
+            /*
+                Successful login. We save the data to the internal storage
+                and to the ContextData object for easy access and open the
+                Map for the user.
+             */
+            JSONObject jsonData = null;
+            if (response.body() != null)
+            {
+                try
+                {
+                    jsonData = new JSONObject(response.body().string());
+                    response.body().close();
+                    ioHandler.writeJSONToInternalData(jsonData);
+                    contextData.userProfile = jsonData;
+                    new Handler(Looper.getMainLooper()).post(new Runnable()
+                    {
+                        @Override
+                        public void run()
+                        {
+                            Toast.makeText(LoginActivity.this,
+                                    "Successful login", Toast.LENGTH_SHORT).show();                                }
+                    });
+                    Intent openMapIntent = new Intent(LoginActivity.this, MenuActivity.class);
+                    startActivity(openMapIntent);
+                }
+                catch (IOException e)
+                {
+                    e.printStackTrace();
+                }
+                catch (JSONException e)
+                {
+                    e.printStackTrace();
                 }
             }
-        });
+        }
     }
 }
