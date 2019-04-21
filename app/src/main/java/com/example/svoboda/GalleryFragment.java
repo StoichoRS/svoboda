@@ -1,7 +1,5 @@
 package com.example.svoboda;
 
-
-import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -35,9 +33,9 @@ public class GalleryFragment extends Fragment implements Callback {
     private ContextData contextData;
     private GridView gridView;
     private ImageView galleryImage;
-    private GalleryImageAdapter galleryImageAdapter;
     private String sessId;
     private SvobodaAPIClient svobodaAPIClient;
+    private IOHandler ioHandler;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -64,24 +62,12 @@ public class GalleryFragment extends Fragment implements Callback {
             startActivity(openMapIntent);
         }
 
+        ioHandler = new IOHandler(getActivity());
         svobodaAPIClient = SvobodaAPIClient.getInstance();
-        galleryImage = (ImageView) view.findViewById(R.id.galleryImageView);
-        gridView = (GridView) view.findViewById(R.id.gridView);
+        galleryImage = view.findViewById(R.id.galleryImageView);
+        gridView = view.findViewById(R.id.gridView);
 
         getGalleryImageNames();
-    }
-
-    private void loadImageFromStorage(String name)
-    {
-            File directory = getActivity().getDir("gallery", Context.MODE_PRIVATE);
-            File image = new File(directory, name);
-
-            if (image.exists())
-            {
-                Glide.with(this)
-                    .load(Uri.fromFile(image))
-                    .into(galleryImage);
-            }
     }
 
     /*
@@ -105,7 +91,13 @@ public class GalleryFragment extends Fragment implements Callback {
         });
         try
         {
-            loadImageFromStorage(pictureNames.getString(0));
+            File image = ioHandler.getFile("gallery", pictureNames.getString(0));
+            if (image.exists())
+            {
+                Glide.with(this)
+                        .load(Uri.fromFile(image))
+                        .into(galleryImage);
+            }
         }
         catch (JSONException e)
         {
@@ -128,13 +120,13 @@ public class GalleryFragment extends Fragment implements Callback {
     }
 
     @Override
-    public void onFailure(Call call, IOException e)
+    public void onFailure(@NonNull  Call call, @NonNull IOException e)
     {
         e.printStackTrace();
     }
 
     @Override
-    public void onResponse(Call call, Response response)
+    public void onResponse(@NonNull  Call call,@NonNull Response response)
     {
         if (!response.isSuccessful())
         {

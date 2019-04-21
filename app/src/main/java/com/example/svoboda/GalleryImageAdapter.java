@@ -20,6 +20,7 @@ public class GalleryImageAdapter extends BaseAdapter {
     private Context context;
     private ContextData contextData;
     private ArrayList<Uri> imagesGlide;
+    private IOHandler ioHandler;
     private Integer[] defaultImages = {
             R.drawable.pic1, R.drawable.pic2,
             R.drawable.pic3, R.drawable.pic4,
@@ -39,6 +40,7 @@ public class GalleryImageAdapter extends BaseAdapter {
     GalleryImageAdapter(Context c, JSONArray pictureNames)
     {
         context = c;
+        ioHandler = new IOHandler(c);
         imagesGlide = new ArrayList<Uri>();
         contextData = ContextData.getInstance();
         try
@@ -46,11 +48,10 @@ public class GalleryImageAdapter extends BaseAdapter {
             for(int i=0; i<pictureNames.length(); i++)
             {
                 String name = pictureNames.getString(i);
-                File directory = context.getDir("gallery", Context.MODE_PRIVATE);
-                File image = new File(directory, name);
+                File image = ioHandler.getFile("gallery", pictureNames.getString(i));
                 if (image.exists())
                 {
-                    imagesGlide.add(Uri.fromFile(new File(directory, name)));
+                    imagesGlide.add(Uri.fromFile(image));
                 }
             }
             for (Integer defImg : defaultImages)
@@ -95,7 +96,7 @@ public class GalleryImageAdapter extends BaseAdapter {
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = inflater.inflate(R.layout.grid_imageview, null);
         }
-        ImageView imageView = (ImageView) convertView.findViewById(R.id.gridImageView);
+        ImageView imageView = convertView.findViewById(R.id.gridImageView);
         Glide.with(context)
                 .load(imagesGlide.get(position))
                 .into(imageView);

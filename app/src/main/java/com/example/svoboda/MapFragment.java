@@ -12,6 +12,7 @@ import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.util.DisplayMetrics;
@@ -52,7 +53,6 @@ import java.util.concurrent.ExecutionException;
 import de.hdodenhof.circleimageview.CircleImageView;
 import okhttp3.Call;
 import okhttp3.Callback;
-import okhttp3.OkHttpClient;
 import okhttp3.Response;
 
 
@@ -67,11 +67,11 @@ public class MapFragment extends Fragment implements
     private GoogleApiClient googleApiClient;
     private LocationRequest locationRequest;
     private SvobodaAPIClient svobodaAPIClient;
-    private OkHttpClient client;
     private ArrayList<CustomMarker> mapMarkers;
     private ContextData contextData;
     private LatLng currentLocation;
     private float currentLocationBearing;
+    private IOHandler ioHandler;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -87,6 +87,7 @@ public class MapFragment extends Fragment implements
         svobodaAPIClient = SvobodaAPIClient.getInstance();
         contextData = ContextData.getInstance();
         mapMarkers = new ArrayList<>();
+        ioHandler = new IOHandler(getActivity());
 
         SupportMapFragment mapFragment = (SupportMapFragment)getChildFragmentManager().findFragmentById(R.id.googlemap);
         mapFragment.getMapAsync(this);
@@ -200,7 +201,6 @@ public class MapFragment extends Fragment implements
 
         View marker = ((LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.custom_marker, null);
         CircleImageView markerImage = marker.findViewById(R.id.location_icon);
-        File resourceFile;
         /*
             If we get a picture name the we try to open the file with that name and set
             it as the picture inside the marker view. If this fails at some point it puts
@@ -208,12 +208,10 @@ public class MapFragment extends Fragment implements
          */
         if (pictureName != null)
         {
-
-            File directory = getActivity().getDir("gallery", Context.MODE_PRIVATE);
-            resourceFile = new File(directory, pictureName);
+            File image = ioHandler.getFile("gallery", pictureName);
             try
             {
-                Bitmap b = BitmapFactory.decodeStream(new FileInputStream(resourceFile));
+                Bitmap b = BitmapFactory.decodeStream(new FileInputStream(image));
                 markerImage.setImageBitmap(b);
             }
             catch (FileNotFoundException e)
@@ -256,9 +254,8 @@ public class MapFragment extends Fragment implements
                 if (!marker.getPictureName().equals(pictureName))
                 {
                     // Delete old picture of the location
-                    File directory = getActivity().getDir("gallery", Context.MODE_PRIVATE);
-                    File file = new File(directory, marker.getPictureName());
-                    file.delete();
+                    File image = ioHandler.getFile("gallery", marker.getPictureName());
+                    image.delete();
                     Bitmap markerDisplay = createCustomMarkerDisplay(getActivity(), pictureName);
                     marker.updateMarkerDisplay(markerDisplay, pictureName);
                 }
@@ -315,13 +312,13 @@ public class MapFragment extends Fragment implements
     }
 
     @Override
-    public void onFailure(Call call, IOException e)
+    public void onFailure(@NonNull  Call call,@NonNull IOException e)
     {
         e.printStackTrace();
     }
 
     @Override
-    public void onResponse(Call call, Response response) throws IOException
+    public void onResponse(@NonNull  Call call,@NonNull Response response) throws IOException
     {
         if (!response.isSuccessful())
         {
@@ -337,20 +334,20 @@ public class MapFragment extends Fragment implements
                 {
                     try
                     {
-                                /*
-                                    We take the current location of the user and the direction he is heading
-                                    and use the to compute a point that is +30 degrees of the direction and
-                                    100 metres away from the current location (rightmostPolygonPoint) and a
-                                    point that is -30 degrees of the direction and 100 metres away from the
-                                    current location (leftmostPolygonPoint). These points are used by the
-                                    camera fragment in its validatePicture() function.
-                                 */
+                        /*
+                            We take the current location of the user and the direction he is heading
+                            and use the to compute a point that is +30 degrees of the direction and
+                            100 metres away from the current location (rightmostPolygonPoint) and a
+                            point that is -30 degrees of the direction and 100 metres away from the
+                            current location (leftmostPolygonPoint). These points are used by the
+                            camera fragment in its validatePicture() function.
+                         */
                         contextData.leftmostPolygonPoint = SphericalUtil.computeOffset(currentLocation, 100, currentLocationBearing - 30);
                         contextData.rightmostPolygonPoint = SphericalUtil.computeOffset(currentLocation, 100, currentLocationBearing + 30);
 
-                                /*
-                                    We add custom markers for each location received from the server
-                                 */
+                        /*
+                            We add custom markers for each location received from the server
+                         */
                         JSONArray locations = new JSONArray(responseBody);
                         for (int index = 0; index < locations.length(); index++) {
                             JSONObject location = locations.getJSONObject(index);
@@ -369,9 +366,13 @@ public class MapFragment extends Fragment implements
                     catch (JSONException e)
                     {
                         Log.e(TAG, e.getLocalizedMessage());
-                    } catch (InterruptedException e) {
+                    }
+                    catch (InterruptedException e)
+                    {
                         e.printStackTrace();
-                    } catch (ExecutionException e) {
+                    }
+                    catch (ExecutionException e)
+                    {
                         e.printStackTrace();
                     }
                 }

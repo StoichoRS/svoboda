@@ -1,7 +1,5 @@
 package com.example.svoboda;
 
-import com.bumptech.glide.RequestBuilder;
-
 import org.json.JSONObject;
 
 import okhttp3.Callback;
