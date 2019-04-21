@@ -9,6 +9,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.location.Location;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -303,12 +304,28 @@ public class MapFragment extends Fragment implements
                 .build();
         mGoogleMap.animateCamera(CameraUpdateFactory.newCameraPosition(camPos));
 
+        // We add the current location latitude and longitude as query parameters
+        String url = null;
+        try
+        {
+            url = Uri.parse(contextData.locationsUrl)
+                    .buildUpon()
+                    .appendQueryParameter("user_id", contextData.userProfile.getString("id"))
+                    .appendQueryParameter("lat", String.valueOf(contextData.currentlLocation.latitude))
+                    .appendQueryParameter("lng", String.valueOf(contextData.currentlLocation.longitude))
+                    .build()
+                    .toString();
+        }
+        catch (JSONException e)
+        {
+            e.printStackTrace();
+        }
         /*
             Make request to the server for the locations around the user using the SvobodaAPIClient.
             When a response is received or the request fails the corresponding functions
             onResponse() and onFailure() are called.
          */
-        svobodaAPIClient.makeRequest(contextData.locationsUrl, null,this);
+        svobodaAPIClient.makeRequest(url, null,this);
     }
 
     @Override

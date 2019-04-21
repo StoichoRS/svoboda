@@ -142,9 +142,10 @@ public class CameraFragment extends Fragment implements View.OnClickListener, Ca
         failText.setVisibility(visibility);
     }
 
-    private void setSuccessDialogVisibility(int visibility)
+    private void setSuccessDialogVisibility(int visibility, String locationName)
     {
         successImage.setVisibility(visibility);
+        successText.append(" " + locationName);
         successText.setVisibility(visibility);
     }
 
@@ -264,14 +265,15 @@ public class CameraFragment extends Fragment implements View.OnClickListener, Ca
                     JSONObject jsonData = new JSONObject(response.body().string());
                     if (photoTaken != null)
                     {
-                        ioHandler.writeFileToInternalData("gallery", jsonData.getString("name"), photoTaken);
+                        ioHandler.writeFileToInternalData("gallery", jsonData.getString("picture_name"), photoTaken);
                     }
                     response.body().close();
+                    String locationName = jsonData.getString("location_name");
                     new Handler(Looper.getMainLooper()).post(new Runnable() {
                         @Override
                         public void run() {
                             setProgressDialogVisibility(View.GONE);
-                            setSuccessDialogVisibility(View.VISIBLE);
+                            setSuccessDialogVisibility(View.VISIBLE, locationName);
                             isValid = true;
                         }
                     });

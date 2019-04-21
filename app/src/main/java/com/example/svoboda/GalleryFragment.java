@@ -91,11 +91,25 @@ public class GalleryFragment extends Fragment implements Callback {
         });
         try
         {
+            /*
+                Set the first picture of those returned by the server
+                as the title picture in the users gallery
+             */
             File image = ioHandler.getFile("gallery", pictureNames.getString(0));
             if (image.exists())
             {
                 Glide.with(this)
                         .load(Uri.fromFile(image))
+                        .into(galleryImage);
+            }
+            else
+            {
+                /*
+                    If the users gallery is empty display a default picture
+                    to demonstrate how gallery looks
+                 */
+                Glide.with(this)
+                        .load(Uri.parse(contextData.drawablesLocationString + getActivity().getResources().getResourceEntryName(R.drawable.pic1)))
                         .into(galleryImage);
             }
         }
