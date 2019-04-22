@@ -16,6 +16,7 @@
             android:layout_width="200dp"
             android:layout_height="30dp"
             android:background="@drawable/rounded_input"
+            android:paddingLeft="2dp"
             android:hint="@string/username"
             android:inputType="textPersonName"
             android:textSize="16sp"
@@ -26,6 +27,7 @@
             android:layout_width="200dp"
             android:layout_height="30dp"
             android:layout_marginTop="20dp"
+            android:paddingLeft="2dp"
             android:background="@drawable/rounded_input"
             android:hint="@string/password"
             android:inputType="textPassword"
@@ -49,6 +51,7 @@
                 android:layout_centerHorizontal="true"
                 android:layout_centerInParent="true"
                 android:text="@string/login"
+                android:textSize="20sp"
                 android:visibility="visible"
                 android:textColor="#fff"
                 />
