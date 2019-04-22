@@ -12,7 +12,8 @@ class ContextData {
 
     private static ContextData instance;
     private String protocol = "http";
-    private String inetAddress = "192.168.100.79";
+    // Change this to your local IP
+    private String inetAddress = "10.102.4.109";
     private String port = "3000";
     private String baseUrl = protocol + "://" + inetAddress + ":" + port + "/";
 

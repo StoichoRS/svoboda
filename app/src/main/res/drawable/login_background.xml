@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/loginBackground" >
+        <shape android:shape="rectangle">
+            <solid android:color="#4d4d4d"/>
+        </shape>
+    </item>
+    <item android:drawable="@drawable/svoboda"
+        android:top="70dp"
+        android:left="20dp"
+        android:right="20dp"
+        android:bottom="400dp">
+
+    </item>
+    <item
+        android:id="@+id/item_img"
+        android:gravity="center"
+        android:top="200dp"
+        android:drawable="@drawable/flag">
+    </item>
+
+</layer-list>
