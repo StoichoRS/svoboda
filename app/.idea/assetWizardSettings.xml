@@ -35,7 +35,7 @@
                                           <PersistentState>
                                             <option name="values">
                                               <map>
-                                                <entry key="url" value="jar:file:/home/nkolev/android%20studio/android-studio/plugins/android/lib/android.jar!/images/material_design_icons/social/ic_sentiment_satisfied_black_24dp.xml" />
+                                                <entry key="url" value="jar:file:/home/nkolev/android%20studio/android-studio/plugins/android/lib/android.jar!/images/material_design_icons/action/ic_face_black_24dp.xml" />
                                               </map>
                                             </option>
                                           </PersistentState>
@@ -69,8 +69,7 @@
                                   </option>
                                   <option name="values">
                                     <map>
-                                      <entry key="outputName" value="ic_action_user" />
-                                      <entry key="theme" value="HOLO_DARK" />
+                                      <entry key="outputName" value="ic_default_profile_pic" />
                                       <entry key="themeColor" value="26c7db" />
                                     </map>
                                   </option>

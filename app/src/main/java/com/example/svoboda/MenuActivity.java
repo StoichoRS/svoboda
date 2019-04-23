@@ -8,7 +8,15 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Base64;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import com.bumptech.glide.Glide;
+
+import org.json.JSONException;
 
 public class MenuActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -17,6 +25,9 @@ public class MenuActivity extends AppCompatActivity
     private DrawerLayout drawerLayout;
     private Fragment currentActiveFragment;
     private FragmentManager fragmentManager;
+    private ImageView profilePicView;
+    private TextView profileNameView;
+    private ContextData contextData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -24,10 +35,33 @@ public class MenuActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu);
 
+        contextData = ContextData.getInstance();
         drawerLayout = findViewById(R.id.drawer_layout);
-
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        View menuHeaderView = navigationView.getHeaderView(0);
+        profilePicView = menuHeaderView.findViewById(R.id.profilePic);
+        profileNameView = menuHeaderView.findViewById(R.id.profileName);
+
+        try
+        {
+            String profilePic = contextData.userProfile.getString("profile_pic");
+            String username = contextData.userProfile.getString("username");
+            byte[] imageByteArray = Base64.decode(profilePic, Base64.DEFAULT);
+            Glide.with(this)
+                    .load(imageByteArray)
+                    .placeholder(R.drawable.ic_default_profile_pic)
+                    .into(profilePicView);
+            profileNameView.append(username);
+        }
+        catch (JSONException e)
+        {
+            Glide.with(this)
+                    .load(R.drawable.ic_default_profile_pic)
+                    .into(profilePicView);
+            profileNameView.append("Unknown");
+            e.printStackTrace();
+        }
 
         fragmentManager = this.getSupportFragmentManager();
         displayFragmnet(new MapFragment());
