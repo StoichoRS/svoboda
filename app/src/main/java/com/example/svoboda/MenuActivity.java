@@ -1,5 +1,6 @@
 package com.example.svoboda;
 
+import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -63,8 +64,9 @@ public class MenuActivity extends AppCompatActivity
             e.printStackTrace();
         }
 
-        fragmentManager = this.getSupportFragmentManager();
-        displayFragmnet(new MapFragment());
+//        fragmentManager = this.getSupportFragmentManager();
+//        displayFragmnet(new MapFragment());
+        startActivity(new Intent(MenuActivity.this, InstantTrackerActivity.class));
     }
 
     private void displayFragmnet(Fragment fragment)

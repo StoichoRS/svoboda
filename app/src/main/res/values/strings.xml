@@ -4,6 +4,7 @@
     <string name="title_activity_google_maps">Map</string>
     <string name="title_activity_test">Map</string>
     <string name="title_activity_menu">MenuActivity</string>
+    <string name="title_instant_tracker_activity">InstantTrackerActivity</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="nav_header_title">Android Studio</string>
@@ -25,6 +26,7 @@
     <string name="username">Username</string>
     <string name="password">Password</string>
     <string name="empty_string"></string>
+    <string name="app_key">8jAU8nI0QZHkEdhVuqWMk76sTRbTxH5QNlPLqjNgl4g=</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

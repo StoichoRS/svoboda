@@ -1,5 +1,7 @@
 apply plugin: 'com.android.application'
 
+def MAXSTAR_SDK_DIR = '/home/nkolev/MAXST/MAXSTARSDK_Android_4.1.1/Build'
+
 android {
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -20,6 +22,10 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+    sourceSets.main {
+        jni.srcDirs = []
+        jniLibs.srcDir "$MAXSTAR_SDK_DIR"
+    }
 }
 
 dependencies {
@@ -39,6 +45,12 @@ dependencies {
     implementation 'de.hdodenhof:circleimageview:2.1.0'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.9.0'
     testImplementation 'junit:junit:4.12'
+    implementation 'gun0912.ted:tedpermission:2.2.0'
+    implementation files("$MAXSTAR_SDK_DIR/VideoPlayer.jar")
+    implementation files("$MAXSTAR_SDK_DIR/MaxstAR.jar")
+    implementation files("$MAXSTAR_SDK_DIR/BT200Ctrl.jar")
+    implementation files("$MAXSTAR_SDK_DIR/BT350Ctrl.jar")
+    implementation files("$MAXSTAR_SDK_DIR/com.osterhoutgroup.api.ext.jar")
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
 }

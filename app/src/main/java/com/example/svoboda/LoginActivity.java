@@ -19,10 +19,6 @@ import org.json.JSONObject;
 import java.io.IOException;
 import okhttp3.Call;
 import okhttp3.Callback;
-import okhttp3.MediaType;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class LoginActivity extends AppCompatActivity implements Callback{
@@ -188,7 +184,8 @@ public class LoginActivity extends AppCompatActivity implements Callback{
                             Toast.makeText(LoginActivity.this,
                                     "Successful login", Toast.LENGTH_SHORT).show();                                }
                     });
-                    Intent openMapIntent = new Intent(LoginActivity.this, MenuActivity.class);
+//                    Intent openMapIntent = new Intent(LoginActivity.this, MenuActivity.class);
+                    Intent openMapIntent = new Intent(LoginActivity.this, InstantTrackerActivity.class);
                     startActivity(openMapIntent);
                 }
                 catch (IOException e)

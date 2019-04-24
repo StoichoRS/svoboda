@@ -27,6 +27,11 @@
             android:label="@string/title_activity_menu"
             android:theme="@style/NoActionBar">
         </activity>
+        <activity
+            android:name=".InstantTrackerActivity"
+            android:label="@string/title_instant_tracker_activity"
+            android:theme="@style/NoActionBar">
+        </activity>
         <activity android:name=".LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
