@@ -114,6 +114,10 @@ public class CameraFragment extends Fragment implements View.OnClickListener, Ca
         }
     }
 
+    /*
+        We use this to manually select an item from the menu
+        so we can redirect to it
+     */
     private void selectNavigationItemFromMenu(Integer item)
     {
         NavigationView navigationView = getActivity().findViewById(R.id.nav_view);
@@ -227,7 +231,7 @@ public class CameraFragment extends Fragment implements View.OnClickListener, Ca
         Called on request failure
      */
     @Override
-    public void onFailure(Call call, IOException e)
+    public void onFailure(@NonNull Call call, @NonNull IOException e)
     {
         e.printStackTrace();
     }
@@ -236,7 +240,7 @@ public class CameraFragment extends Fragment implements View.OnClickListener, Ca
         Called when a response is received from the request
      */
     @Override
-    public void onResponse(Call call, Response response) throws IOException
+    public void onResponse(@NonNull Call call, @NonNull Response response)
     {
         if (!response.isSuccessful())
         {

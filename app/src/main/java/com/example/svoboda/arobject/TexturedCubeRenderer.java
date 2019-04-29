@@ -1,7 +1,3 @@
-/*
- * Copyright 2016 Maxst, Inc. All Rights Reserved.
- */
-
 package com.example.svoboda.arobject;
 
 import android.graphics.Bitmap;

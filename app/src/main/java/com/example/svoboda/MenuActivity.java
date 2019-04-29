@@ -64,9 +64,8 @@ public class MenuActivity extends AppCompatActivity
             e.printStackTrace();
         }
 
-//        fragmentManager = this.getSupportFragmentManager();
-//        displayFragmnet(new MapFragment());
-        startActivity(new Intent(MenuActivity.this, InstantTrackerActivity.class));
+        fragmentManager = this.getSupportFragmentManager();
+        displayFragmnet(new MapFragment());
     }
 
     private void displayFragmnet(Fragment fragment)
@@ -91,7 +90,6 @@ public class MenuActivity extends AppCompatActivity
          */
         if (id == R.id.nav_camera)
         {
-
             displayFragmnet(new CameraFragment());
         }
         else if (id == R.id.nav_gallery)
@@ -101,6 +99,10 @@ public class MenuActivity extends AppCompatActivity
         else if (id == R.id.nav_map)
         {
             displayFragmnet(new MapFragment());
+        }
+        else if (id == R.id.nav_description)
+        {
+            displayFragmnet(new InstantTrackerFragment());
         }
 
         // Close the menu

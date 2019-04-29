@@ -1,7 +1,3 @@
-/*
- * Copyright 2017 Maxst, Inc. All Rights Reserved.
- */
-
 package com.example.svoboda.arobject;
 
 import com.maxst.ar.ColorFormat;

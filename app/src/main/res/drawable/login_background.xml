@@ -6,18 +6,21 @@
             <solid android:color="#4d4d4d"/>
         </shape>
     </item>
-    <item android:drawable="@drawable/svoboda"
+    <item
         android:top="70dp"
         android:left="20dp"
         android:right="20dp"
         android:bottom="400dp">
-
+        <bitmap
+            android:src="@drawable/svoboda"
+            android:gravity="fill" />
     </item>
     <item
         android:id="@+id/item_img"
-        android:gravity="center"
-        android:top="200dp"
-        android:drawable="@drawable/flag">
+        android:top="200dp">
+        <bitmap
+            android:src="@drawable/flag"
+            android:gravity="fill" />
     </item>
 
 </layer-list>

@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.util.DisplayMetrics;
@@ -112,6 +113,15 @@ public class MapFragment extends Fragment implements
         mGoogleMap = googleMap;
         // Removes the button for focusing the screen on current location
         mGoogleMap.getUiSettings().setMyLocationButtonEnabled(false);
+        // Disable moving the map
+        mGoogleMap.getUiSettings().setScrollGesturesEnabled(false);
+        /*
+            Get the last location, if there is one, and move the
+            camera to that location with a zoom
+         */
+        if (contextData.currentlLocation != null) {
+            mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(contextData.currentlLocation, 16));
+        }
 
         /*
             Customise the styling of the base map using a JSON object defined
@@ -134,6 +144,9 @@ public class MapFragment extends Fragment implements
         {
             buildGoogleApiClient();
             mGoogleMap.setMyLocationEnabled(true);
+        }
+        else {
+            ActivityCompat.requestPermissions(getActivity(), new String[] {android.Manifest.permission.ACCESS_FINE_LOCATION}, 50);
         }
     }
 
@@ -292,10 +305,21 @@ public class MapFragment extends Fragment implements
     {
         currentLocation = new LatLng(location.getLatitude(), location.getLongitude());
         currentLocationBearing = location.getBearing();
+        /*
+            If this is the first current location found for the
+            user then we move the camera to it and also zoom in on
+            it, otherwise we don't zoom.
+         */
+        if (contextData.currentlLocation == null)
+        {
+            mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 16));
+        }
+        else
+        {
+            mGoogleMap.moveCamera(CameraUpdateFactory.newLatLng(currentLocation));
+        }
         // Save the current location in the ContextData for easy access
         contextData.currentlLocation = currentLocation;
-        // set camera zoom
-        mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 16));
 
         // Rotates the camera of the map in the direction the user is moving
         CameraPosition camPos = CameraPosition

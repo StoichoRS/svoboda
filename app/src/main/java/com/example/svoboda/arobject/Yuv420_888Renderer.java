@@ -1,7 +1,3 @@
-/*
- * Copyright 2018 Maxst, Inc. All Rights Reserved.
- */
-
 package com.example.svoboda.arobject;
 
 import android.opengl.GLES20;

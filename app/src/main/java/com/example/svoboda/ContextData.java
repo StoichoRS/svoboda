@@ -13,7 +13,8 @@ class ContextData {
     private static ContextData instance;
     private String protocol = "http";
     // Change this to your local IP
-    private String inetAddress = "10.102.4.109";
+//    private String inetAddress = "10.102.4.109";
+    private String inetAddress = "192.168.100.79";
     private String port = "3000";
     private String baseUrl = protocol + "://" + inetAddress + ":" + port + "/";
 
@@ -24,6 +25,7 @@ class ContextData {
     String galleryUrl = baseUrl + "gallery";
     String validationUrl = baseUrl + "validate-location";
     String locationsUrl = baseUrl + "locations";
+    String descriptionUrl = baseUrl + "description";
     String drawablesLocationString = "android.resource://com.example.svoboda/drawable/";
     LatLng currentlLocation;
     LatLng leftmostPolygonPoint;

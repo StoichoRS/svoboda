@@ -116,7 +116,7 @@ public class LoginActivity extends AppCompatActivity implements Callback{
     public void sendCredentialsToServer(JSONObject requestData)
     {
         /*
-            Dont allow user to click login button while validating the credentials
+            Don't allow user to click login button while validating the credentials
          */
         setLoginButtonState(false);
         svobodaAPIClient.makeRequest(contextData.loginUrl, requestData, this);
@@ -184,8 +184,7 @@ public class LoginActivity extends AppCompatActivity implements Callback{
                             Toast.makeText(LoginActivity.this,
                                     "Successful login", Toast.LENGTH_SHORT).show();                                }
                     });
-//                    Intent openMapIntent = new Intent(LoginActivity.this, MenuActivity.class);
-                    Intent openMapIntent = new Intent(LoginActivity.this, InstantTrackerActivity.class);
+                    Intent openMapIntent = new Intent(LoginActivity.this, MenuActivity.class);
                     startActivity(openMapIntent);
                 }
                 catch (IOException e)
